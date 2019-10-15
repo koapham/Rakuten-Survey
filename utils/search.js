@@ -1,12 +1,12 @@
-import Question from '../ethereum/survey';
+import Survey from '../ethereum/survey';
 import {getString} from './ipfs';
 import factory from '../ethereum/factory';
 const Fuse = require("fuse.js");
-async function search(value, questions){
+async function search(value, surveys){
     let list = [];
-    for (let i=0;i<questions.length;i++){
-        var summary = await Question(questions[i]).methods.getSummary().call();
-        list.push({'address':questions[i],'title':summary[0],'description':summary[1]});
+    for (let i=0;i<surveys.length;i++){
+        var summary = await Survey(surveys[i]).methods.getSummary().call();
+        list.push({'address':surveys[i],'guestSpeaker':summary[7],'suggestion':summary[8]});
     }
     let options = {
         id:"address",
@@ -14,11 +14,11 @@ async function search(value, questions){
         shouldSort: true,
         tokenize: true,
         keys: [{
-            name:'title',
-            weight:0.7
+            name:'guestSpeaker',
+            weight:0.5
         },{
-            name:'description',
-            weight: 0.3
+            name:'suggestion',
+            weight: 0.5
         }]
     }
     let fuse = new Fuse(list,options);
